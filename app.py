@@ -325,7 +325,10 @@ except json.JSONDecodeError as e:
     st.error(f"Field mapping is not valid JSON: {e}")
     st.stop()
 except Exception as e:  # noqa: BLE001
-    st.error(f"Pipeline failed: {e}")
+    import traceback
+    tb = traceback.extract_tb(e.__traceback__)
+    loc = f"  [{tb[-1].filename.split('/')[-1]}:{tb[-1].lineno}]" if tb else ""
+    st.error(f"Pipeline failed: {type(e).__name__}: {e}{loc}")
     st.stop()
 
 # ── shared metric computations ────────────────────────────────────────────────
