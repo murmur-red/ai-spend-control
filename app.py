@@ -66,50 +66,50 @@ st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
 .stApp { background:
-    radial-gradient(1100px 500px at 85% -8%, rgba(225,29,72,.10), transparent 60%),
-    radial-gradient(900px 420px at 0% 0%, rgba(153,27,27,.08), transparent 55%), #0c0a0a; }
+    radial-gradient(1100px 500px at 85% -8%, rgba(225,29,72,.06), transparent 60%),
+    radial-gradient(900px 420px at 0% 0%, rgba(153,27,27,.04), transparent 55%), #fbf9f9; }
 /* Hero */
 .mr-badge { font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.28em;
-    text-transform:uppercase; color:#f87171; background:rgba(69,10,10,.5); border:1px solid rgba(153,27,27,.35);
+    text-transform:uppercase; color:#b91c1c; background:#fef2f2; border:1px solid #fecaca;
     padding:4px 10px; border-radius:5px; }
 .mr-title { font-weight:900; font-size:2.5rem; line-height:1.02; letter-spacing:-.02em; margin:.55rem 0 .35rem;
-    background:linear-gradient(90deg,#f5f5f4,#f87171 55%,#e11d48); -webkit-background-clip:text;
+    background:linear-gradient(90deg,#292524,#b91c1c 60%,#e11d48); -webkit-background-clip:text;
     -webkit-text-fill-color:transparent; }
-.mr-sub { color:#a8a29e; font-size:.95rem; font-weight:300; max-width:52rem; }
+.mr-sub { color:#57534e; font-size:.95rem; font-weight:400; max-width:52rem; }
 .mr-flow { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.06em; color:#78716c; margin-top:.4rem; }
-.mr-flow b { color:#fca5a5; font-weight:600; }
-/* Section headers → mono, crimson tick */
-.stMarkdown h4, .stMarkdown h3 { font-weight:800 !important; letter-spacing:-.01em;
+.mr-flow b { color:#b91c1c; font-weight:600; }
+/* Section headers → crimson tick */
+.stMarkdown h4, .stMarkdown h3 { font-weight:800 !important; letter-spacing:-.01em; color:#1c1917;
     border-left:3px solid #e11d48; padding-left:.6rem; }
 /* Metric cards */
-[data-testid="stMetric"] { background:#141212; border:1px solid #292524; border-radius:10px;
-    padding:14px 16px; box-shadow:0 1px 0 rgba(0,0,0,.4); }
+[data-testid="stMetric"] { background:#ffffff; border:1px solid #e7e5e4; border-radius:10px;
+    padding:14px 16px; box-shadow:0 1px 2px rgba(28,25,23,.06); }
 [data-testid="stMetricLabel"] p { font-family:'JetBrains Mono',monospace; font-size:10px !important;
     letter-spacing:.18em; text-transform:uppercase; color:#78716c !important; }
-[data-testid="stMetricValue"] { color:#fafaf9; font-weight:800; }
+[data-testid="stMetricValue"] { color:#1c1917; font-weight:800; }
 /* Buttons */
-.stButton>button, .stDownloadButton>button { background:#b91c1c; color:#fff; border:1px solid rgba(248,113,113,.25);
+.stButton>button, .stDownloadButton>button { background:#b91c1c; color:#fff; border:1px solid rgba(153,27,27,.25);
     border-radius:7px; font-weight:600; letter-spacing:.02em; transition:all .15s; }
 .stButton>button:hover, .stDownloadButton>button:hover { background:#dc2626; transform:translateY(-1px);
-    box-shadow:0 6px 18px rgba(120,0,20,.4); }
-.stButton>button:disabled { background:#292524; color:#78716c; border-color:#292524; }
+    box-shadow:0 6px 18px rgba(190,18,60,.25); }
+.stButton>button:disabled { background:#e7e5e4; color:#a8a29e; border-color:#e7e5e4; }
 /* Cards / alerts / expanders */
-[data-testid="stExpander"] { background:#141212; border:1px solid #292524; border-radius:10px; }
-[data-testid="stExpander"] summary:hover { color:#f87171; }
-div[data-testid="stNotification"] { border-radius:9px; border:1px solid #292524; }
-[data-testid="stSidebar"] { background:#0a0808; border-right:1px solid #1c1917; }
-hr { border-color:#1c1917 !important; }
+[data-testid="stExpander"] { background:#ffffff; border:1px solid #e7e5e4; border-radius:10px; }
+[data-testid="stExpander"] summary:hover { color:#b91c1c; }
+div[data-testid="stNotification"] { border-radius:9px; border:1px solid #e7e5e4; }
+[data-testid="stSidebar"] { background:#faf7f7; border-right:1px solid #eee7e5; }
+hr { border-color:#e7e5e4 !important; }
 .stCaption, .stCaption p { color:#78716c; }
 /* Top nav */
 .mr-nav { display:flex; align-items:center; justify-content:space-between;
-    border-bottom:1px solid #1c1917; padding:0 2px 12px; margin-bottom:18px; }
+    border-bottom:1px solid #e7e5e4; padding:0 2px 12px; margin-bottom:18px; }
 .mr-wm { font-weight:900; font-size:1.05rem; letter-spacing:-.02em;
-    background:linear-gradient(90deg,#f5f5f4,#f87171,#e11d48); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    background:linear-gradient(90deg,#292524,#b91c1c,#e11d48); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .mr-navbadge { font-family:'JetBrains Mono',monospace; font-size:9px; letter-spacing:.22em; text-transform:uppercase;
-    color:#f87171; background:rgba(69,10,10,.5); border:1px solid rgba(153,27,27,.35); padding:3px 8px; border-radius:5px; margin-left:10px; }
+    color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; padding:3px 8px; border-radius:5px; margin-left:10px; }
 .mr-nav-r a { font-family:'JetBrains Mono',monospace; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    color:#a8a29e; text-decoration:none; margin-left:22px; transition:color .15s; }
-.mr-nav-r a:hover { color:#f87171; }
+    color:#78716c; text-decoration:none; margin-left:22px; transition:color .15s; }
+.mr-nav-r a:hover { color:#b91c1c; }
 </style>
 <div class="mr-nav">
   <div><span class="mr-wm">murmur.red</span><span class="mr-navbadge">🌐 Portfolio · Spend Control</span></div>
