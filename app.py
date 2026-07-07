@@ -133,7 +133,7 @@ cfg = SpendConfig()
 
 def render_guide(page: str) -> None:
     """Identical guide UI on every page — an intro banner + a support/docs expander."""
-    st.markdown('<div id="methodology"></div>', unsafe_allow_html=True)   # anchor for the Methodology nav link
+    st.subheader("Methodology", anchor="methodology")   # native, reliable anchor for the nav link
     st.info("👋 New here? Open the guide — what this is, how to connect your data, what each number "
             "means, and what to do if you don't have some of it.")
     with st.expander("📘 Start here — support & docs", expanded=False):
