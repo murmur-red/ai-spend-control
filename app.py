@@ -116,7 +116,7 @@ hr { border-color:#1c1917 !important; }
   <div class="mr-nav-r">
     <a href="#methodology">Methodology</a>
     <a href="http://localhost:8533" target="_blank">Churn Engine ↗</a>
-    <a href="https://github.com/murmur-red" target="_blank">GitHub</a>
+    <a href="https://github.com/murmur-red/ai-spend-control" target="_blank">GitHub</a>
   </div>
 </div>
 <div>
