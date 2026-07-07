@@ -115,7 +115,7 @@ hr { border-color:#e7e5e4 !important; }
   <div><span class="mr-wm">murmur.red</span><span class="mr-navbadge">🌐 Portfolio · Spend Control</span></div>
   <div class="mr-nav-r">
     <a href="#methodology">Methodology</a>
-    <a href="http://localhost:8533" target="_blank">Churn Engine ↗</a>
+    <a href="https://murmur-churn-engine.fly.dev" target="_blank">Churn Engine ↗</a>
     <a href="https://github.com/murmur-red/ai-spend-control" target="_blank">GitHub</a>
   </div>
 </div>
