@@ -136,7 +136,7 @@ def render_guide(page: str) -> None:
     st.subheader("Methodology", anchor="methodology")   # native, reliable anchor for the nav link
     st.info("👋 New here? Open the guide — what this is, how to connect your data, what each number "
             "means, and what to do if you don't have some of it.")
-    with st.expander("📘 Start here — support & docs", expanded=False):
+    with st.expander("📘 Start here — support & docs", expanded=True):
         st.markdown("""
 **What this is.** Spend control for a company that *buys* SaaS + AI. With usage-based pricing the bill
 moves every month, so a signed contract guarantees nothing. This ties **consumption → cost → budget →
