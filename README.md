@@ -85,4 +85,4 @@ faked). Contract-term extraction from PDFs is on the roadmap.
 
 ---
 
-<sub>Built with Claude Code. Sibling: [saas-churn-engine](https://github.com/murmur-red/saas-churn-engine).</sub>
+<sub>Sibling project: [saas-churn-engine](https://github.com/murmur-red/saas-churn-engine).</sub>
