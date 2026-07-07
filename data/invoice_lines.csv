@@ -1,0 +1,4 @@
+id,vendor_id,period,invoiced_cost,currency,commitment_line_id
+inv1,v1,2026-05,50000,USD,l1
+inv2,v1,2026-06,90000,USD,l1
+inv3,v2,2026-06,4000,USD,l2

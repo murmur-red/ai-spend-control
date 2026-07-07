@@ -1,0 +1,4 @@
+id,source,source_vendor_ref,vendor_id,period,model_or_endpoint,unit_type,units_consumed,team_id,cost_center,project_id
+u1,billing-api,llmcloud,v1,2026-05,gpt-4,TOKEN,2500000,teamA,cc-eng,projX
+u2,billing-api,llmcloud,v1,2026-06,gpt-4,TOKEN,4000000,teamA,cc-eng,projX
+u3,sso,seatsuite,v2,2026-06,,SEAT,80,teamB,cc-ops,projY

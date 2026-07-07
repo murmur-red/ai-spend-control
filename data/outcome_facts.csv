@@ -1,0 +1,3 @@
+source,period,scope_type,scope_id,kpi_name,kpi_value
+analytics,2026-06,project,projX,tickets_resolved,1200
+analytics,2026-06,project,projY,leads_generated,300

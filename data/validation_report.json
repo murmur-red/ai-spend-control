@@ -1,0 +1,21 @@
+{
+  "source": "synthetic-finops-export",
+  "data_as_of": "2026-06-20",
+  "freshness": {
+    "age_days": 10,
+    "stale": false,
+    "sla_days": 45
+  },
+  "counts": {
+    "vendors": 2,
+    "contracts": 2,
+    "fx_rates": 3,
+    "commitment_lines": 2,
+    "rate_components": 4,
+    "usage_facts": 3,
+    "invoice_lines": 3,
+    "outcomes": 2,
+    "rejected": 0
+  },
+  "rejected": []
+}

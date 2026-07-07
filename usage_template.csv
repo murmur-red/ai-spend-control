@@ -1,0 +1,7 @@
+vendor,period,unit_type,units_consumed,cost,team,project,model
+Anthropic,2026-05,TOKEN,4200000,336.00,ml,assistant,claude-sonnet-5
+Anthropic,2026-06,TOKEN,5100000,408.00,ml,assistant,claude-sonnet-5
+OpenAI,2026-05,TOKEN,3000000,180.00,web,search,gpt-4
+OpenAI,2026-06,TOKEN,3600000,216.00,web,search,gpt-4
+Snowflake,2026-06,GB,1200,240.00,data,warehouse,
+Datadog,2026-06,SEAT,40,720.00,platform,observability,

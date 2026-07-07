@@ -1,0 +1,10 @@
+vendor,category,pricing,monthly_cost,currency,monthly_units,unit_type,renewal_date,owner,cost_center
+Acme LLM,AI API,usage,500,USD,,TOKEN,2026-12-31,platform,ai
+Globex AI,AI API,usage,220,USD,,TOKEN,2026-12-31,platform,ai
+Initech Vision,AI API,usage,90,USD,,TOKEN,2026-11-15,ml,ai
+Umbrella Search,Research API,usage,40,USD,,REQUEST,2026-09-01,research,ai
+Hooli Notes,Productivity SaaS,flat,30,USD,3,SEAT,2026-08-15,ops,ops
+Vandelay Voice,Voice AI,usage,25,USD,,REQUEST,2026-10-01,media,media
+Stark Compute,Infrastructure,usage,60,USD,,GB,2026-11-01,platform,infra
+Wayne CDN,Infrastructure,flat,10,USD,,REQUEST,2026-08-30,platform,infra
+Wonka CI,Dev / CI,flat,8,USD,2,SEAT,2027-02-01,platform,infra

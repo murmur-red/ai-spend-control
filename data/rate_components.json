@@ -1,0 +1,6 @@
+[
+  {"id":"rc1","line_id":"l1","order":1,"scheme":"PREPAID_DRAWDOWN","params":{"unit_type":"TOKEN","prepaid_units":3000000,"unit_value":0.02,"expiry":"2026-06","drawdown_priority":1}},
+  {"id":"rc2","line_id":"l1","order":2,"scheme":"TIERED_USAGE","params":{"unit_type":"TOKEN","tiers":[[2000000,0.03],[10000000,0.02]],"tier_mode":"MARGINAL"}},
+  {"id":"rc3","line_id":"l1","order":3,"scheme":"OVERAGE","params":{"unit_type":"TOKEN","overage_rate":0.04}},
+  {"id":"rc4","line_id":"l2","order":1,"scheme":"PER_SEAT","params":{"unit_type":"SEAT","unit_price":50}}
+]

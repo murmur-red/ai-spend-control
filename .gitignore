@@ -1,0 +1,18 @@
+# secrets — never publish
+.env
+.env.*
+!.env.example
+.admin.env
+*.key
+.streamlit/secrets.toml
+
+# python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# os / logs / scratch
+.DS_Store
+*.log
+/tmp/
