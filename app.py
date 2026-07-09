@@ -137,11 +137,31 @@ cfg = SpendConfig()
 
 
 def render_guide(page: str) -> None:
-    """Identical guide UI on every page — an intro banner + a support/docs expander."""
+    """Identical guide UI on every page — a how-to, an intro banner, and a support/docs expander."""
+    with st.expander("🚀 How to use this — no coding, just a spreadsheet", expanded=True):
+        st.markdown("""
+**1. You're seeing live demo data.** Just scroll down to explore how it works.
+
+**2. To load YOUR spend → look at the left sidebar.** Under **“Data source”** (top-left), click
+**“Connect a warehouse (usage) — demo”**.
+
+**3. On that page, under “How do you want to connect?”, click “Upload a usage/billing CSV”.**
+
+**4. Click the “⬇️ Download CSV template” button.** Open it in **Excel or Google Sheets** and add
+**one row per tool, per month**:
+- *vendor · month (e.g. 2026-06) · how much you used · what it cost · team · project*
+- 📍 **Where to find these numbers:** each tool's billing page — **Anthropic Console → Usage**,
+  **OpenAI → Usage**, **AWS → Cost Explorer** — or your finance team's spreadsheet.
+
+**5. Save the file as “.csv”**, then click **“Browse files”** and pick it. The page reads your columns
+and shows your spend, waste, and who's draining budget — automatically.
+
+*No passwords, no database, no technical setup — it's a spreadsheet upload, and your file is never stored.*
+""")
     st.subheader("Methodology", anchor="methodology")   # native, reliable anchor for the nav link
     st.info("👋 New here? Open the guide — what this is, how to connect your data, what each number "
             "means, and what to do if you don't have some of it.")
-    with st.expander("📘 Start here — support & docs", expanded=True):
+    with st.expander("📘 Start here — support & docs", expanded=False):
         st.markdown("""
 **What this is.** Spend control for a company that *buys* SaaS + AI. With usage-based pricing the bill
 moves every month, so a signed contract guarantees nothing. This ties **consumption → cost → budget →
