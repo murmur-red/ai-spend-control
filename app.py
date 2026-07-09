@@ -21,6 +21,7 @@ from mapping import FieldMapping
 from actions import derive_actions
 from action_sinks import CalendarSink, dispatch
 from warehouse_ingest import dataset_from_usage_rows, REQUIRED_FIELDS, OPTIONAL_FIELDS
+from sources import read_upload, fetch_gsheet
 
 st.set_page_config(page_title="ai-spend-control", page_icon="💸", layout="wide")
 URGENCY_ICON = {"URGENT": "🚨", "ELEVATED": "🟠", "STRATEGIC": "🔵", "OK": "🟢"}
@@ -142,21 +143,22 @@ def render_guide(page: str) -> None:
         st.markdown("""
 **1. You're seeing live demo data.** Just scroll down to explore how it works.
 
-**2. To load YOUR spend → look at the left sidebar.** Under **“Data source”** (top-left), click
-**“Connect a warehouse (usage) — demo”**.
+**2. To load YOUR spend → look at the left sidebar, under “Data source”.** Pick how to bring data in:
+- **📄 Upload a file** — a **CSV or Excel** export from your computer.
+- **🔗 Google Sheet** — paste a share link (no download needed).
+- **🛢️ Database / SQL** — for your tech team (advanced).
 
-**3. On that page, under “How do you want to connect?”, click “Upload a usage/billing CSV”.**
-
-**4. Click the “⬇️ Download CSV template” button.** Open it in **Excel or Google Sheets** and add
-**one row per tool, per month**:
+**3. Whichever you pick, click “⬇️ Download CSV template” first.** Open it in **Excel or Google Sheets**
+and add **one row per tool, per month**:
 - *vendor · month (e.g. 2026-06) · how much you used · what it cost · team · project*
 - 📍 **Where to find these numbers:** each tool's billing page — **Anthropic Console → Usage**,
   **OpenAI → Usage**, **AWS → Cost Explorer** — or your finance team's spreadsheet.
 
-**5. Save the file as “.csv”**, then click **“Browse files”** and pick it. The page reads your columns
-and shows your spend, waste, and who's draining budget — automatically.
+**4. Bring it in:** for a file, click **“Browse files”** and pick your `.csv`/`.xlsx`. For a Google Sheet,
+set it to **Share → Anyone with the link → Viewer** and paste the link. The page reads your columns and
+shows your spend, waste, and who's draining budget — automatically.
 
-*No passwords, no database, no technical setup — it's a spreadsheet upload, and your file is never stored.*
+*No passwords, no setup — a spreadsheet or a shared link, and your file is never stored.*
 """)
     st.subheader("Methodology", anchor="methodology")   # native, reliable anchor for the nav link
     st.info("👋 New here? Open the guide — what this is, how to connect your data, what each number "
@@ -201,9 +203,10 @@ aggregated totals, never your raw rows. Base currency: {cfg.base_currency}.
 
 st.sidebar.markdown("### Data source")
 source = st.sidebar.radio("Where does the data come from?",
-                          ["Company overview (demo)", "Connect a warehouse (usage) — demo"])
+                          ["🧪 Public sandbox (demo)", "📄 Upload a file (CSV / Excel)",
+                           "🔗 Google Sheet (link)", "🛢️ Database / SQL (advanced)"])
 try:
-    if source.startswith("Company overview"):
+    if source.startswith("🧪"):
         render_guide("company")
         import company as co
         al = _company_allocs()
@@ -283,39 +286,55 @@ try:
 - **Bad rows are rejected with a reason, never guessed** — the dashboard never shows a faked number.
 """)
 
-    mode = st.radio("How do you want to connect?",
-                    ["Use demo data", "Upload a usage/billing CSV (recommended for your data)",
-                     "Advanced: live SQL (self-hosted only)"], horizontal=False)
-
+    _tmpl = ("vendor,period,unit_type,units_consumed,cost,team,project,model\n"
+             "Anthropic,2026-06,TOKEN,5100000,408.00,ml,assistant,claude-sonnet-5\n"
+             "Snowflake,2026-06,GB,1200,240.00,data,warehouse,\n")
     report = {"rejected": [], "unpriced_vendors": [], "matched": 0, "vendors": 0}
 
-    if mode.startswith("Upload"):
-        tmpl = ("vendor,period,unit_type,units_consumed,cost,team,project,model\n"
-                "Anthropic,2026-06,TOKEN,5100000,408.00,ml,assistant,claude-sonnet-5\n"
-                "Snowflake,2026-06,GB,1200,240.00,data,warehouse,\n")
-        st.download_button("⬇️ Download CSV template", tmpl, "usage_template.csv", "text/csv")
-        st.caption(f"Required columns → **{', '.join(REQUIRED_FIELDS)}**. Optional → "
-                   f"{', '.join(OPTIONAL_FIELDS)}. Column names can differ — you'll map them next.")
-        up = st.file_uploader("Upload your usage/billing export (CSV)", type=["csv"])
-        if up is None:
-            st.info("⬆️ Upload a CSV to continue, or switch to **Use demo data** to see it working.")
-            st.stop()
-        raw = pd.read_csv(up, dtype=str).fillna("")
+    def _ds_from_raw(raw):
+        """Their columns → mapping UI → validated dataset (shared by file + Google Sheet)."""
         st.caption("Detected columns: " + ", ".join(raw.columns))
         guess = _guess_mapping(list(raw.columns))
         mapping_json = st.text_area("Map your columns → our fields  (our_field: your_column)",
                                     json.dumps(guess, indent=2), height=230)
         mapping = FieldMapping(json.loads(mapping_json))
-        mapped = mapping.apply(raw.to_dict("records"))
-        ds, report = dataset_from_usage_rows(mapped, cfg)
+        return dataset_from_usage_rows(mapping.apply(raw.to_dict("records")), cfg)
 
-    elif mode.startswith("Use demo"):
-        mapped = FieldMapping(DEMO_MAPPING).apply(DEMO_ROWS)
-        ds, report = dataset_from_usage_rows(mapped, cfg)
-        st.caption("Demo uses a *different* source schema (supplier/month/meter/qty/amount) mapped to our "
-                   "fields — the exact path your real CSV takes.")
+    if source.startswith("📄"):   # Upload a file (CSV or Excel)
+        st.download_button("⬇️ Download CSV template", _tmpl, "usage_template.csv", "text/csv")
+        st.caption(f"Required columns → **{', '.join(REQUIRED_FIELDS)}**. Optional → "
+                   f"{', '.join(OPTIONAL_FIELDS)}. Column names can differ — you'll map them next.")
+        up = st.file_uploader("Upload your usage/billing export (CSV or Excel)", type=["csv", "xlsx", "xls"])
+        if up is None:
+            if st.button("▶️ Try with example data instead"):
+                ds, report = dataset_from_usage_rows(FieldMapping(DEMO_MAPPING).apply(DEMO_ROWS), cfg)
+            else:
+                st.info("⬆️ Upload a file (CSV or Excel), or click **Try with example data**.")
+                st.stop()
+        else:
+            try:
+                raw = read_upload(up)
+            except Exception as e:  # noqa: BLE001
+                st.error(f"Could not read that file: {e}")
+                st.stop()
+            ds, report = _ds_from_raw(raw)
 
-    else:  # Advanced: live SQL
+    elif source.startswith("🔗"):   # Google Sheet (public link)
+        st.download_button("⬇️ Download CSV template", _tmpl, "usage_template.csv", "text/csv")
+        st.caption("In Google Sheets: **Share → General access → Anyone with the link → Viewer**, then "
+                   "paste the link. Column names can differ — you'll map them next.")
+        url = st.text_input("Paste your Google Sheet link", placeholder="https://docs.google.com/spreadsheets/d/…")
+        if not url:
+            st.info("Paste a public Google Sheet link to continue.")
+            st.stop()
+        try:
+            raw = fetch_gsheet(url)
+        except Exception as e:  # noqa: BLE001
+            st.error(f"Couldn't read that sheet: {e}")
+            st.stop()
+        ds, report = _ds_from_raw(raw)
+
+    else:  # 🛢️ Database / SQL (advanced)
         st.warning("**Self-hosted only.** Live SQL is for a copy you run yourself with a **read-only** "
                    "connection supplied via environment variables — **never type production credentials "
                    "into a public instance**. On this hosted demo it runs an in-memory sample DB.")
