@@ -5,3 +5,9 @@ backgroundColor = "#ffffff"
 secondaryBackgroundColor = "#f5f3f2"
 textColor = "#1c1917"
 font = "sans serif"
+
+[server]
+fileWatcherType = "none"
+
+[client]
+toolbarMode = "minimal"

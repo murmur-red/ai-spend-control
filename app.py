@@ -25,6 +25,12 @@ from warehouse_ingest import dataset_from_usage_rows, REQUIRED_FIELDS, OPTIONAL_
 st.set_page_config(page_title="ai-spend-control", page_icon="💸", layout="wide")
 URGENCY_ICON = {"URGENT": "🚨", "ELEVATED": "🟠", "STRATEGIC": "🔵", "OK": "🟢"}
 
+
+@st.cache_data(show_spinner=False)
+def _company_allocs():
+    from company import synth_company
+    return synth_company()
+
 # Their-schema demo rows (deliberately different column names) — proves the real upload path works.
 DEMO_ROWS = [
     {"supplier": "Anthropic", "month": "2026-05", "meter": "TOKEN", "qty": "4200000", "amount": "336", "team": "ml", "project": "assistant", "model": "claude-sonnet-5"},
@@ -64,7 +70,6 @@ def _guess_mapping(cols: list[str]) -> dict[str, str]:
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&display=swap');
 .stApp { background:
     radial-gradient(1100px 500px at 85% -8%, rgba(225,29,72,.06), transparent 60%),
     radial-gradient(900px 420px at 0% 0%, rgba(153,27,27,.04), transparent 55%), #fbf9f9; }
@@ -181,7 +186,7 @@ try:
     if source.startswith("Company overview"):
         render_guide("company")
         import company as co
-        al = co.synth_company()
+        al = _company_allocs()
         total = sum(a.monthly_cost for a in al)
         n_people = len({a.person for a in al})
         st.markdown("## 🏢 Northwind — company spend control tower")
