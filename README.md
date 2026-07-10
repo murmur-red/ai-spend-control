@@ -12,6 +12,10 @@ guarantees nothing. This ties **consumption → cost → budget → value** and 
 **wasting, over-paying, or paying for and not using** — before the invoice does. The costing engine is
 deterministic; the only LLM (an advisor) is fenced by a grounding critic that can't invent a number.
 
+### ▶ [Live demo — spend.murmur.red](https://spend.murmur.red)
+
+![AI Spend Control — company spend control tower](docs/dashboard.png)
+
 > Part of the **murmur.red** portfolio · sibling project → [**saas-churn-engine**](https://github.com/murmur-red/saas-churn-engine) (the sell-side of the same coin).
 
 ---
