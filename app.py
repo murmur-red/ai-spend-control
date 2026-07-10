@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 
 import pandas as pd
@@ -46,26 +47,39 @@ DEMO_MAPPING = {"vendor": "supplier", "period": "month", "unit_type": "meter", "
 
 
 def _guess_mapping(cols: list[str]) -> dict[str, str]:
-    """Best-effort auto-map of the user's columns → our fields (case/synonym-insensitive)."""
+    """Best-effort auto-map of the user's columns → our fields. Tolerates real-world headers like
+    'Billing Month' or 'Amount (USD)' via exact → token → substring matching (best score wins)."""
     syn = {
         "vendor": ["vendor", "supplier", "provider", "service", "tool", "merchant"],
         "period": ["period", "month", "billing_month", "date", "invoice_month"],
         "unit_type": ["unit_type", "unit", "meter", "usage_type", "metric"],
-        "units_consumed": ["units_consumed", "units", "qty", "quantity", "usage", "amount_units"],
-        "cost": ["cost", "amount", "spend", "charge", "total", "usd"],
+        "units_consumed": ["units_consumed", "units", "qty", "quantity", "usage", "quantity"],
+        "cost": ["cost", "amount", "spend", "charge", "total", "usd", "price"],
         "team_id": ["team_id", "team", "department", "dept", "group"],
         "project_id": ["project_id", "project", "app", "workload"],
         "model_or_endpoint": ["model_or_endpoint", "model", "endpoint", "sku"],
         "currency": ["currency", "cur", "ccy"],
-        "category": ["category", "type", "class"],
+        "category": ["category", "class"],
     }
-    low = {c.lower().strip(): c for c in cols}
-    out = {}
+
+    def _score(col: str, names: list[str]) -> int:
+        low = col.lower().strip()
+        toks = re.findall(r"[a-z0-9]+", low)
+        if low in names:
+            return 3                       # exact column == a synonym
+        if any(n in toks for n in names):
+            return 2                       # a synonym is one of the column's words
+        if any(n in low for n in names):
+            return 1                       # a synonym appears inside the column name
+        return 0
+
+    used: set[str] = set()
+    out: dict[str, str] = {}
     for field, names in syn.items():
-        for n in names:
-            if n in low:
-                out[field] = low[n]
-                break
+        scored = sorted(((_score(c, names), c) for c in cols if c not in used), key=lambda x: -x[0])
+        if scored and scored[0][0] > 0:
+            out[field] = scored[0][1]
+            used.add(scored[0][1])
     return out
 
 

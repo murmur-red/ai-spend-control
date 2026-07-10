@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import io
 import re
+import urllib.error
 import urllib.request
 
 import pandas as pd
@@ -42,10 +43,21 @@ def fetch_gsheet(url: str, timeout: int = 15) -> pd.DataFrame:
     """Fetch a public Google Sheet as a DataFrame via its CSV export endpoint."""
     export = gsheet_export_url(url)
     req = urllib.request.Request(export, headers={"User-Agent": "murmur-data/1.0"})
-    with urllib.request.urlopen(req, timeout=timeout) as r:   # noqa: S310 (host is validated above)
-        raw = r.read()
-    df = pd.read_csv(io.BytesIO(raw), dtype=str).fillna("")
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:   # noqa: S310 (host is validated above)
+            raw = r.read()
+    except (urllib.error.HTTPError, urllib.error.URLError):
+        raise ValueError("Couldn't reach that sheet. Check the link is a valid Google Sheet shared as "
+                         "'anyone with the link can view'.")
+    head = raw[:200].lstrip().lower()
+    if not raw.strip() or head.startswith((b"<!doctype", b"<html")):
+        # Google returns its HTML sign-in page when the sheet isn't publicly shared.
+        raise ValueError("Couldn't read that sheet — set it to Share → Anyone with the link → "
+                         "Viewer, then paste the link again.")
+    try:
+        df = pd.read_csv(io.BytesIO(raw), dtype=str).fillna("")
+    except Exception:  # noqa: BLE001
+        raise ValueError("That doesn't look like a readable sheet — check the link and that it's shared publicly.")
     if df.empty or len(df.columns) == 0:
-        raise ValueError("That sheet looks empty, or it isn't shared publicly "
-                         "(set it to 'anyone with the link can view').")
+        raise ValueError("That sheet looks empty (add a header row and data), or it isn't shared publicly.")
     return df
