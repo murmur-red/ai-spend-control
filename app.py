@@ -359,6 +359,11 @@ try:
                            r["team"], r["project"]) for r in DEMO_ROWS])
         conn.commit()
         query = st.text_area("Read-only SQL (usage rows)", "SELECT * FROM usage", height=90)
+        _q = query.strip().rstrip(";").lower()
+        if not _q.startswith("select") or ";" in _q or re.search(
+                r"\b(attach|pragma|insert|update|delete|drop|create|alter|replace|vacuum|reindex)\b", _q):
+            st.error("Only a single read-only SELECT is allowed here.")
+            st.stop()
         rows = SQLConnector(conn, query).fetch()
         mapped = FieldMapping({**DEMO_MAPPING, "cost": "amount"}).apply(rows)
         ds, report = dataset_from_usage_rows(mapped, cfg)

@@ -76,6 +76,8 @@ def reconcile(dataset: Dataset, config, report_path: str | None = None) -> dict[
         by_type[e["type"]] = by_type.get(e["type"], 0) + 1
     report = {"matched": matched, "exceptions_by_type": by_type, "exceptions": exceptions}
 
-    out = Path(report_path or (Path(config.data_dir) / "reconcile_report.json"))
-    out.write_text(json.dumps(report, indent=2))
+    # Privacy: only persist the report when a caller explicitly asks (e.g. CLI/tests). The app never
+    # passes report_path, so user-uploaded data stays in memory and is never written to disk.
+    if report_path is not None:
+        Path(report_path).write_text(json.dumps(report, indent=2))
     return report
